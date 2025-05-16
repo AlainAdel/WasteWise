@@ -1,10 +1,49 @@
-import { useRef, useState } from "react";
+
+import { useRef, useState, useEffect } from "react";
+
+function LocationInput({ zip, setZip }) {
+  return (
+    // <div className="my-4 w-full max-w-md">
+    <div className="my-4 max-w-md items-center">
+      <label className="block text-white font-mono text-sm mb-1 text-center">Location</label>
+      <input
+        type="text"
+        value={zip}
+        onChange={(e) => setZip(e.target.value)}
+        placeholder="Enter ZIP code"
+        maxLength="5"
+        className="w-full px-4 py-2 text-center font-mono text-sm border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400"
+      />
+    </div>
+  );
+}
+
+function AutoDetectZip({ setZip }) {
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.postcode) {
+                setZip(data.postcode);
+              }
+            });
+        },
+        (err) => console.log("Geolocation denied", err)
+      );
+    }
+  }, []);
+
+  return null;
+}
 
 export default function Home() {
   const fileInputRef = useRef();
   const [previews, setPreviews] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [zip, setZip] = useState("");
 
   const openFilePicker = () => fileInputRef.current.click();
 
@@ -12,13 +51,12 @@ export default function Home() {
     const fileArray = Array.from(files);
     const newPreviews = [];
 
-    fileArray.forEach((file, i) => {
+    fileArray.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newPreviews.push(reader.result);
         if (newPreviews.length === fileArray.length) {
           setPreviews((prev) => [...prev, ...newPreviews]);
-          setShowModal(true);
         }
       };
       reader.readAsDataURL(file);
@@ -35,108 +73,66 @@ export default function Home() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFiles(e.dataTransfer.files);
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
-
-  const handleDragLeave = () => setDragActive(false);
-
-  const removeImage = (indexToRemove) => {
-    setPreviews(previews.filter((_, index) => index !== indexToRemove));
+  const handleSubmit = () => {
+    console.log("Submitting with ZIP:", zip);
+    // add actual submission logic here
   };
 
   return (
-    <div
-      className="h-[calc(100vh-64px)] flex flex-col items-center justify-center space-y-6 px-4"
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-    >
-      <p className="text-blue-400 text-center jetbrains-mono-italic my-4">
-        Easily classify your waste and find nearby recycling centers
-      </p>
+    <div className="min-h-screen flex flex-col items-center justify-center space-y-6 p-4 bg-black text-white ">
+      
+<div className={`flex flex-col items-center ${previews.length > 0 ? '-translate-y-4' : ''}`}>
+  <p className="text-blue-400 text-center jetbrains-mono-italic px-4 mb-2 ">
+    Easily classify your waste and find nearby recycling centers
+  </p>
+  <div
+    onClick={openFilePicker}
+    onDrop={handleDrop}
+    onDragOver={(e) => e.preventDefault()}
+    className="mt-2 bg-[#0d1117] text-white font-mono text-sm px-6 py-3 rounded-full hover:bg-[#161b22] cursor-pointer text-center"
+  >
+    Upload Waste Image
+  </div>
+</div>
 
-      <button
-        onClick={openFilePicker}
-        className={`bg-gray-900 text-white px-6 py-3 rounded-full border ${
-          dragActive ? "border-blue-400" : "border-white"
-        } hover:bg-gray-800 transition-all duration-200 font-mono text-sm`}
-      >
-        Upload Waste Image
-      </button>
 
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-      />
+      <div className="w-full max-w-sm flex flex-col items-center space-y-4">
+        <input
+          type="file"
+          ref={fileInputRef}
+          multiple
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        
 
-      {/* Modal Preview */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-          <div className="relative bg-gray-900 p-6 rounded-lg max-w-3xl w-full shadow-lg border border-white overflow-y-auto max-h-[90vh]">
-            <h2 className="text-white text-sm font-mono mb-4 tracking-widest uppercase">
-              Image Preview
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-              {previews.map((src, idx) => (
-                <div key={idx} className="relative group">
-                  <img
-                    src={src}
-                    alt={`Preview ${idx + 1}`}
-                    className="w-full rounded border border-gray-700"
-                  />
-                  <button
-                    onClick={() => removeImage(idx)}
-                    className="absolute top-2 right-2 bg-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-500"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* ➕ Add More Button */}
-            <button
-              onClick={openFilePicker}
-              className="absolute bottom-4 left-4 bg-white text-black text-sm w-8 h-8 flex items-center justify-center rounded-full font-bold hover:bg-gray-200 transition"
-              title="Add more images"
-            >
-              +
-            </button>
-
-            <div className="flex justify-end space-x-3 mt-4">
+        <div className="flex flex-wrap w-full gap-4 mt-4 justify-center">
+          {previews.map((src, idx) => (
+            <div key={idx} className="relative w-32 h-32">
+              <img src={src} alt={`preview-${idx}`} className="w-full h-full object-cover rounded-md" />
               <button
-                onClick={() => {
-                  setShowModal(false);
-                  setPreviews([]);
-                }}
-                className="px-4 py-2 bg-gray-800 text-white text-xs font-mono rounded-full border border-white hover:bg-gray-700 transition"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => alert("Submit images to backend")}
-                className="px-4 py-2 bg-blue-500 text-white text-xs font-mono rounded-full hover:bg-blue-400 transition"
-              >
-                Submit
-              </button>
+                onClick={() => setPreviews(previews.filter((_, i) => i !== idx))}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs"
+              >×</button>
             </div>
-          </div>
+          ))}
         </div>
-      )}
+
+        <LocationInput zip={zip} setZip={setZip} />
+        <AutoDetectZip setZip={setZip} />
+
+        <button
+          onClick={handleSubmit}
+          className="mt-4 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md font-mono text-sm"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }
-
