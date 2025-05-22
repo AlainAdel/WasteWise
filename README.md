@@ -11,15 +11,14 @@
 - **Frontend:** React.js, Tailwind CSS
 - **Backend:** Express.js
 - **Database:** PostgreSQL
-- **Deployment:** Vercel (frontend), Render (backend)
+- **Deployment:** Railway
 
 ## 🛠️ Features
 
 - Upload image of waste item
-- AI/ML-based classification (optional future scope)
+- AI based classification
 - Nearby recycling facility suggestions
 - Facility info filtering by type/location
-- Full CRUD support for admin users
 
 ## 📦 Installation
 
