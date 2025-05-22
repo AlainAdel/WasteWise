@@ -1,6 +1,6 @@
 // POST /classify
 export const classifyImage = async (imageUrl) => {
-  const res = await fetch('wastewise-server.up.railway.app/classify', {
+  const res = await fetch('https://wastewise-server.up.railway.app/classify', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageUrl }),

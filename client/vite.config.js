@@ -8,9 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  server: {
-    proxy: {
-      '/api': 'wastewise-server.up.railway.app',
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': 'wastewise-server.up.railway.app',
+  //   },
+  // },
 })
