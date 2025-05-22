@@ -1,6 +1,8 @@
 
 import { useRef, useState, useEffect } from "react";
 import { classifyImage, getFacilities } from "../api"; // Adjust the import path as necessary
+import ResultCard from '../components/ResultCard'; // adjust path as needed
+
 
 
 function LocationInput({ zip, setZip }) {
@@ -48,6 +50,10 @@ export default function Home() {
   const [zip, setZip] = useState("");
   const openFilePicker = () => fileInputRef.current.click();
   const [facilities, setFacilities] = useState([]);
+  const resultRef = useRef(null);
+  const [classification, setClassification] = useState(null);
+
+
 
   const handleFiles = (files) => {
     const fileArray = Array.from(files);
@@ -80,18 +86,46 @@ export default function Home() {
     }
   };
 
+  // const handleSubmit = async () => {
+  //   try {
+  //     // const { label } = await classifyImage(previews[0]);        // Send to /classify
+  //     const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
+  //     const results = await getFacilities(label, zip);    // Fetch from /facilities
+  //     setFacilities(results);                                 // Update UI
+  //     setFacilities(results);
+  //     setTimeout(() => {
+  //       resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+  //     }, 100);
+
+  //     console.log("Label returned:", label);
+  //     console.log("Facilities:", results);
+  //   } catch (err) {
+  //     console.error("Error:", err);
+  //   }
+  // };
+
   const handleSubmit = async () => {
-    try {
-      // const { label } = await classifyImage(previews[0]);        // Send to /classify
-      const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
-      const results = await getFacilities(label, zip);    // Fetch from /facilities
-      setFacilities(results);                                 // Update UI
-      console.log("Label returned:", label);
-      console.log("Facilities:", results);
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
+  // Simulate classification
+  const fakeClassification = "Plastic Bottle";
+
+  setClassification(fakeClassification);
+  
+  try {
+    const results = await getFacilities(fakeClassification, zip); // 🔗 actual backend call
+    setFacilities(results);
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  } catch (err) {
+    console.error("Error fetching facilities:", err);
+  }  
+  
+
+  setTimeout(() => {
+    resultRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, 100);
+};
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center space-y-6 p-4 bg-black text-white ">
@@ -154,7 +188,7 @@ export default function Home() {
     </ul> */}
 
     {/* 🆕 Add results display */}
-    {facilities.length > 0 && (
+    {/* {facilities.length > 0 && (
       <div className="mt-4 w-full max-w-md">
         <h3 className="text-lg font-bold mb-2">Matching Facilities:</h3>
         <ul className="list-disc list-inside space-y-1">
@@ -163,7 +197,13 @@ export default function Home() {
           ))}
         </ul>
       </div>
+    )} */}
+    {facilities.length > 0 && (
+      <div ref={resultRef} className="mt-6 w-full max-w-2xl">
+        <ResultCard classification={classification} facilities={facilities} />
+      </div>
     )}
   </div>
   );
 }
+// 

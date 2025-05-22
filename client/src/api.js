@@ -9,7 +9,13 @@ export const classifyImage = async (imageUrl) => {
 };
 
 // GET /facilities
+// export const getFacilities = async (type, zip) => {
+//   const res = await fetch(`http://localhost:3000/facilities?type=${type}&zip=${zip}`);
+//   return await res.json();
+// };
+
 export const getFacilities = async (type, zip) => {
-  const res = await fetch(`http://localhost:3000/facilities?type=${type}&zip=${zip}`);
-  return await res.json();
+  const res = await fetch(`/api/facilities?type=${type}`);
+  if (!res.ok) throw new Error('Failed to fetch facilities');
+  return res.json();
 };
