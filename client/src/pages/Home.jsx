@@ -52,6 +52,8 @@ export default function Home() {
   const [facilities, setFacilities] = useState([]);
   const resultRef = useRef(null);
   const [classification, setClassification] = useState(null);
+  const [results, setResults] = useState([]); // replaces single classification + facilities
+
 
 
 
@@ -87,21 +89,47 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const { label } = await classifyImage(previews[0]);        // Send to /classify
-      // const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
+    const allResults = [];
 
-      setClassification(label);
-      const results = await getFacilities(label, zip);    // Fetch from /facilities
-      setFacilities(results);                                 // Update UI
+    // try {
+    //   const { label } = await classifyImage(previews[0]);        // Send to /classify
+    //   // const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
+
+    //   setClassification(label);
+    //   const results = await getFacilities(label, zip);    // Fetch from /facilities
+    //   setFacilities(results);                                 // Update UI
+    //   setTimeout(() => {
+    //     resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //   }, 100);
+
+    //   console.log("Label returned:", label);
+    //   console.log("Facilities:", results);
+    // } catch (err) {
+    //   console.error("Error:", err);
+    // }
+    try {
+      for (const preview of previews) {
+        // 🔍 Step 1: classify the image
+        const { label } = await classifyImage(preview);
+
+        // 🔍 Step 2: get matching facilities
+        const facilities = await getFacilities(label, zip);
+
+        // ✅ Step 3: store result
+        allResults.push({
+          classification: label,
+          facilities,
+          preview,
+        });
+      }
+
+      setResults(allResults);
+
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
-
-      console.log("Label returned:", label);
-      console.log("Facilities:", results);
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error during multi-image classification:", err);
     }
   };
 
@@ -199,11 +227,24 @@ export default function Home() {
         </ul>
       </div>
     )} */}
-    {facilities.length > 0 && (
+    {/* {facilities.length > 0 && (
       <div ref={resultRef} className="mt-6 w-full max-w-2xl">
         <ResultCard classification={classification} facilities={facilities} />
       </div>
+    )} */}
+    {results.length > 0 && (
+      <div ref={resultRef} className="mt-6 w-full max-w-2xl space-y-6">
+        {results.map((res, i) => (
+          <ResultCard
+            key={i}
+            classification={res.classification}
+            facilities={res.facilities}
+            preview={res.preview}
+          />
+        ))}
+      </div>
     )}
+
   </div>
   );
 }

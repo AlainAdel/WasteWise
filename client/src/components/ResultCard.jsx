@@ -1,8 +1,16 @@
 import React from 'react';
 
-const ResultCard = ({ classification, facilities }) => {
+const ResultCard = ({ classification, facilities, preview }) => {
   return (
     <div className="font-mono bg-gray-800 text-white rounded-2xl shadow-lg p-6 w-full max-w-2xl mx-auto space-y-4">
+      {preview && (
+        <img
+          src={preview}
+          alt="Waste Preview"
+          className="w-full h-48 object-cover rounded-xl mb-4 border border-gray-700"
+        />
+      )}
+            
       <h2 className="text-xl font-semibold text-blue-400">
         Waste Classification: <span className="text-white">{classification}</span>
       </h2>
