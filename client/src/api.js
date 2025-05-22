@@ -5,7 +5,11 @@ export const classifyImage = async (imageUrl) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageUrl }),
   });
-  return await res.json();
+  if (!res.ok) throw new Error('Classification failed');
+
+  return res.json();
+
+  // return await res.json();
 };
 
 // GET /facilities

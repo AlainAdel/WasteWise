@@ -86,45 +86,46 @@ export default function Home() {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     // const { label } = await classifyImage(previews[0]);        // Send to /classify
-  //     const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
-  //     const results = await getFacilities(label, zip);    // Fetch from /facilities
-  //     setFacilities(results);                                 // Update UI
-  //     setFacilities(results);
-  //     setTimeout(() => {
-  //       resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-  //     }, 100);
-
-  //     console.log("Label returned:", label);
-  //     console.log("Facilities:", results);
-  //   } catch (err) {
-  //     console.error("Error:", err);
-  //   }
-  // };
-
   const handleSubmit = async () => {
-  // Simulate classification
-  const fakeClassification = "Plastic Bottle";
+    try {
+      const { label } = await classifyImage(previews[0]);        // Send to /classify
+      // const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
 
-  setClassification(fakeClassification);
+      setClassification(label);
+      const results = await getFacilities(label, zip);    // Fetch from /facilities
+      setFacilities(results);                                 // Update UI
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+
+      console.log("Label returned:", label);
+      console.log("Facilities:", results);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  // const handleSubmit = async () => {
+  // // Simulate classification
+  // const fakeClassification = "Plastic Bottle";
+
+  // setClassification(fakeClassification);
   
-  try {
-    const results = await getFacilities(fakeClassification, zip); // 🔗 actual backend call
-    setFacilities(results);
-    setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  } catch (err) {
-    console.error("Error fetching facilities:", err);
-  }  
+  // try {
+  //   const results = await getFacilities(fakeClassification, zip); // 🔗 actual backend call
+  //   setFacilities(results);
+  //   setTimeout(() => {
+  //     resultRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }, 100);
+  // } catch (err) {
+  //   console.error("Error fetching facilities:", err);
+  // }  
   
 
-  setTimeout(() => {
-    resultRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, 100);
-};
+//   setTimeout(() => {
+//     resultRef.current?.scrollIntoView({ behavior: "smooth" });
+//   }, 100);
+// };
 
 
   return (
