@@ -4,7 +4,7 @@
 
 ## 🌐 Live Demo
 
-[Visit the deployed app](https://your-app-url.com)
+[Visit the deployed app](https://wastewise.up.railway.app/)
 
 ## 🚀 Tech Stack
 

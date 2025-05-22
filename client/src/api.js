@@ -16,7 +16,3 @@ export const getFacilities = async (type, zip) => {
   if (!res.ok) throw new Error('Failed to fetch facilities');
   return res.json();
 };
-
-
-
-// https://wastewise-server.up.railway.app/
