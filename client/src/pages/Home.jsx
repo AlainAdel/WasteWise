@@ -1,13 +1,12 @@
 
 import { useRef, useState, useEffect } from "react";
-import { classifyImage, getFacilities } from "../api"; // Adjust the import path as necessary
-import ResultCard from '../components/ResultCard'; // adjust path as needed
+import { classifyImage, getFacilities } from "../api";
+import ResultCard from '../components/ResultCard';
 
 
 
 function LocationInput({ zip, setZip }) {
   return (
-    // <div className="my-4 w-full max-w-md">
     <div className="my-4 max-w-md items-center">
       <label className="block text-white font-mono text-sm mb-1 text-center">Location</label>
       <input
@@ -91,22 +90,6 @@ export default function Home() {
   const handleSubmit = async () => {
     const allResults = [];
 
-    // try {
-    //   const { label } = await classifyImage(previews[0]);        // Send to /classify
-    //   // const { label } = await classifyImage("https://upload.wikimedia.org/wikipedia/commons/7/78/Plastic_bottles.jpg");
-
-    //   setClassification(label);
-    //   const results = await getFacilities(label, zip);    // Fetch from /facilities
-    //   setFacilities(results);                                 // Update UI
-    //   setTimeout(() => {
-    //     resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-    //   }, 100);
-
-    //   console.log("Label returned:", label);
-    //   console.log("Facilities:", results);
-    // } catch (err) {
-    //   console.error("Error:", err);
-    // }
     try {
       for (const preview of previews) {
         // 🔍 Step 1: classify the image
@@ -138,36 +121,10 @@ export default function Home() {
     }
   };
 
-  // const handleSubmit = async () => {
-  // // Simulate classification
-  // const fakeClassification = "Plastic Bottle";
-
-  // setClassification(fakeClassification);
-  
-  // try {
-  //   const results = await getFacilities(fakeClassification, zip); // 🔗 actual backend call
-  //   setFacilities(results);
-  //   setTimeout(() => {
-  //     resultRef.current?.scrollIntoView({ behavior: "smooth" });
-  //   }, 100);
-  // } catch (err) {
-  //   console.error("Error fetching facilities:", err);
-  // }  
-  
-
-//   setTimeout(() => {
-//     resultRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, 100);
-// };
-
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center space-y-6 p-4 bg-black text-white ">
       
     <div className={`flex flex-col items-center ${previews.length > 0 ? '-translate-y-4' : ''}`}>
-      {/* <p className="text-blue-400 text-center jetbrains-mono-italic px-4 mb-2 ">
-        Easily classify your waste and find nearby recycling centers
-      </p> */}
       <h1 className="text-blue-400 text-center text-2xl font-bold montserrat-bold-italic tracking-widest px-4 mb-2 ">
         EASILY CLASSIFY YOUR WASTE AND FIND NEARBY RECYCLING CENTERS
       </h1>
@@ -215,28 +172,6 @@ export default function Home() {
       </button>
     </div>
 
-    {/* <ul>
-        {facilities.map((f, i) => (
-          <li key={i}>{f.name} — ZIP: {f.zip}</li>
-        ))}
-    </ul> */}
-
-    {/* 🆕 Add results display */}
-    {/* {facilities.length > 0 && (
-      <div className="mt-4 w-full max-w-md">
-        <h3 className="text-lg font-bold mb-2">Matching Facilities:</h3>
-        <ul className="list-disc list-inside space-y-1">
-          {facilities.map((f, i) => (
-            <li key={i}>{f.name} — ZIP: {f.zip}</li>
-          ))}
-        </ul>
-      </div>
-    )} */}
-    {/* {facilities.length > 0 && (
-      <div ref={resultRef} className="mt-6 w-full max-w-2xl">
-        <ResultCard classification={classification} facilities={facilities} />
-      </div>
-    )} */}
     {results.length > 0 && (
       <div ref={resultRef} className="mt-6 w-full max-w-2xl space-y-6">
         {results.map((res, i) => (

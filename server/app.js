@@ -7,7 +7,6 @@ import facilitiesRouter from './routes/facilities.js';
 import testRoute from './routes/testRoute.js';
 
 
-
 const app = express();
 
 app.use(cors());

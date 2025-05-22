@@ -8,15 +8,7 @@ export const classifyImage = async (imageUrl) => {
   if (!res.ok) throw new Error('Classification failed');
 
   return res.json();
-
-  // return await res.json();
 };
-
-// GET /facilities
-// export const getFacilities = async (type, zip) => {
-//   const res = await fetch(`http://localhost:3000/facilities?type=${type}&zip=${zip}`);
-//   return await res.json();
-// };
 
 export const getFacilities = async (type, zip) => {
   const res = await fetch(`/api/facilities?type=${type}`);

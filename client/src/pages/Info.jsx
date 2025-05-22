@@ -71,21 +71,6 @@ const Info = () => {
         </ul>
       </section>
 
-      {/* Credits */}
-      {/* <section>
-        <h2 className="text-2xl text-blue-300 mb-2">Credits & Technology</h2>
-        <p className="text-gray-300 font-mono">
-          WasteWise was built using:
-        </p>
-        <ul className="list-disc list-inside text-gray-300 font-mono space-y-1">
-          <li>React + Tailwind CSS</li>
-          <li>Express.js (Node.js backend)</li>
-          <li>PostgreSQL database</li>
-          <li>OpenAI Vision API</li>
-          <li>Vercel / Render / Netlify for deployment</li>
-        </ul>
-      </section> */}
-
       {/* Contact */}
       <section>
         <h2 className="text-2xl text-blue-300 mb-2">Contact / Feedback</h2>
