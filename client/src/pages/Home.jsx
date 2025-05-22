@@ -125,6 +125,11 @@ export default function Home() {
 
       setResults(allResults);
 
+      // Append to history in localStorage
+      const existing = JSON.parse(localStorage.getItem("wastewise-history")) || [];
+      localStorage.setItem("wastewise-history", JSON.stringify([...existing, ...allResults]));
+      
+
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
